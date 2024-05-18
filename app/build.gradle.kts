@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -36,7 +38,21 @@ android {
 }
 
 dependencies {
+    //dagger
+    implementation (libs.dagger)
+    kapt (libs.dagger.compiler)
 
+    //viewModel
+    implementation (libs.androidx.fragment.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    //network
+    implementation(libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+    implementation(libs.coil)
+
+    implementation (libs.kotlinx.coroutines.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
