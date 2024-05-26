@@ -40,9 +40,8 @@ class FragmentIssuesList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recycler = view.findViewById(R.id.rc_view)
         val adapter = IssuesListAdapter {
-            val issueDetails = FragmentIssuesDetails().apply {
-                arguments = bundleOf("Issue" to it)
-            }
+
+            val issueDetails = FragmentIssuesDetails.newInstance(it)
             parentFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, issueDetails)
                 .addToBackStack(null)
