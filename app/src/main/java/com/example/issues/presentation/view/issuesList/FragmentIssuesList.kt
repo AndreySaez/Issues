@@ -1,5 +1,6 @@
 package com.example.issues.presentation.view.issuesList
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,23 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issues.R
+import com.example.issues.di.appComponent
 import com.example.issues.presentation.view.issueDetails.FragmentIssuesDetails
 import com.example.issues.presentation.viewModel.IssuesViewModel
+import com.example.issues.presentation.viewModel.IssuesViewModelFactory
+import dagger.Lazy
+import javax.inject.Inject
 
 class FragmentIssuesList : Fragment() {
     private var recycler: RecyclerView? = null
-    private val viewModel by viewModels<IssuesViewModel>()
+    private val viewModel by viewModels<IssuesViewModel> { viewModelFactory.get() }
+
+    @Inject
+    lateinit var viewModelFactory: Lazy<IssuesViewModelFactory>
+    override fun onAttach(context: Context) {
+        context.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,16 +53,6 @@ class FragmentIssuesList : Fragment() {
         viewModel.issuesList.observe(viewLifecycleOwner) {
             it ?: return@observe
             adapter.bindIssue(it)
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        updateData()
-    }
-
-    private fun updateData() {
-        (recycler?.adapter as? IssuesListAdapter)?.apply {
         }
     }
 }

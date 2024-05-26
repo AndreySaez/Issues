@@ -25,6 +25,9 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
 
     override fun onBindViewHolder(holder: IssuesListViewHolder, position: Int) {
         holder.bindData(getItem(position))
+        when(issuesList){
+            
+        }
         holder.itemView.setOnClickListener {
             clickListener.onCLick(getItem(position))
         }

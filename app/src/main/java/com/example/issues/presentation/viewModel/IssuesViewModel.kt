@@ -8,8 +8,7 @@ import com.example.issues.data.Issue
 import com.example.issues.domain.IssuesRepository
 import kotlinx.coroutines.launch
 
-class IssuesViewModel : ViewModel() {
-    private val issuesRepository = IssuesRepository()
+class IssuesViewModel(issuesRepository: IssuesRepository) : ViewModel() {
     val issuesList: LiveData<List<Issue>> get() = _issuesList
     private val _issuesList = MutableLiveData<List<Issue>>()
 
