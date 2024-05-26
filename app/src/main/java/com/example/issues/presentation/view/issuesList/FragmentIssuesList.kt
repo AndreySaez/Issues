@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issues.R
 import com.example.issues.di.appComponent
+import com.example.issues.presentation.ViewModelFactory
 import com.example.issues.presentation.view.issueDetails.FragmentIssuesDetails
 import com.example.issues.presentation.viewModel.IssuesViewModel
-import com.example.issues.presentation.viewModel.IssuesViewModelFactory
 import dagger.Lazy
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class FragmentIssuesList : Fragment() {
     private val viewModel by viewModels<IssuesViewModel> { viewModelFactory.get() }
 
     @Inject
-    lateinit var viewModelFactory: Lazy<IssuesViewModelFactory>
+    lateinit var viewModelFactory: Lazy<ViewModelFactory>
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)

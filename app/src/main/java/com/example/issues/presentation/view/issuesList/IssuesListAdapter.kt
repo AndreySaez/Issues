@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issues.R
-import com.example.issues.data.Issue
+import com.example.issues.domain.Issue
 
 class IssuesListAdapter(private val clickListener: ClickListener) :
     RecyclerView.Adapter<IssuesListViewHolder>() {
@@ -26,7 +26,7 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
     override fun onBindViewHolder(holder: IssuesListViewHolder, position: Int) {
         holder.bindData(getItem(position))
         when(issuesList){
-            
+
         }
         holder.itemView.setOnClickListener {
             clickListener.onCLick(getItem(position))

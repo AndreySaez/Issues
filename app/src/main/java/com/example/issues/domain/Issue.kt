@@ -1,4 +1,4 @@
-package com.example.issues.data
+package com.example.issues.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

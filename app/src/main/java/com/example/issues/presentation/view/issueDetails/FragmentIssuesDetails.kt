@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.issues.R
-import com.example.issues.data.Issue
+import com.example.issues.domain.Issue
 
 class FragmentIssuesDetails() : Fragment() {
     override fun onCreateView(
