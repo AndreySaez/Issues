@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issues.R
@@ -16,6 +16,9 @@ import com.example.issues.presentation.ViewModelFactory
 import com.example.issues.presentation.view.issueDetails.FragmentIssuesDetails
 import com.example.issues.presentation.viewModel.IssuesViewModel
 import dagger.Lazy
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FragmentIssuesList : Fragment() {
@@ -49,9 +52,10 @@ class FragmentIssuesList : Fragment() {
         }
         recycler?.adapter = adapter
         recycler?.layoutManager = LinearLayoutManager(context)
-        viewModel.issuesList.observe(viewLifecycleOwner) {
-            it ?: return@observe
-            adapter.bindIssue(it)
+        lifecycleScope.launch {
+            viewModel.issuesList.onEach {
+                adapter.bindIssue(it)
+            }.collect()
         }
     }
 }
