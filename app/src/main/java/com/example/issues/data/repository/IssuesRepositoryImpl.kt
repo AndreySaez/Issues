@@ -13,6 +13,6 @@ class IssuesRepositoryImpl @Inject constructor(
     private val mapper: IssueMapper,
 ) : IssuesRepository {
     override suspend fun getIssues(): List<Issue> = withContext(Dispatchers.IO) {
-        apiInterface.getIssues().map(mapper::toIssue)
+        apiInterface.getIssues().items.map(mapper::toIssue)
     }
 }

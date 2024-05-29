@@ -16,9 +16,8 @@ import com.example.issues.presentation.ViewModelFactory
 import com.example.issues.presentation.view.issueDetails.FragmentIssuesDetails
 import com.example.issues.presentation.viewModel.IssuesViewModel
 import dagger.Lazy
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FragmentIssuesList : Fragment() {
@@ -52,10 +51,8 @@ class FragmentIssuesList : Fragment() {
         }
         recycler?.adapter = adapter
         recycler?.layoutManager = LinearLayoutManager(context)
-        lifecycleScope.launch {
-            viewModel.issuesList.onEach {
-                adapter.bindIssue(it)
-            }.collect()
-        }
+        viewModel.issuesList.onEach {
+            adapter.bindIssue(it)
+        }.launchIn(lifecycleScope)
     }
 }

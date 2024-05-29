@@ -21,16 +21,13 @@ class FragmentIssuesDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args = this.arguments
-        // Мб засунуть это в какую-то функцию? fun getIssueData(args:Bundle?)
-        val issueData = args?.getParcelable(ISSUE_KEY) as? Issue
+        val issueData = arguments?.getParcelable(ISSUE_KEY) as? Issue
         issueData?.let {
             bindData(it, view)
         }
 
     }
 
-    //Мб это убрать в какой-то юзкейс или типо того ну вообщем чтобы не тут была реализация функции
     private fun bindData(issue: Issue, view: View) {
         view.findViewById<TextView>(R.id.details_issue_title).apply {
             text = issue.title

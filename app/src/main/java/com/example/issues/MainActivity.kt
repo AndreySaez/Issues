@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, FragmentIssuesList())
+            .addToBackStack(null)
             .commit()
     }
 }

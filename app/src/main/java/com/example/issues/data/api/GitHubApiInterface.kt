@@ -5,17 +5,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Query
 
-// key: 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
 // https://api.github.com/repos/AndreySaez/Issues/issues
 // https://api.github.com/repos/OWNER/REPO/issues
+//https://api.github.com/search/issues?q=is:issue%20repo:AndreySaez/Issues
 interface GitHubApiInterface {
-    @GET("/repos/AndreySaez/Issues/issues")
+    @GET("/search/issues")
     @Headers(
         "Accept: application/vnd.github.raw+json",
         "X-GitHub-Api-Version: 2022-11-28"
     )
-    suspend fun getIssues(): List<IssueDto>
+    suspend fun getIssues(
+        @Query("q") isIssue: String = "is:issue repo:AndreySaez/Issues"
+    ): IssueResponseDto
 
     companion object {
         private const val BASE_URL = "https://api.github.com/"

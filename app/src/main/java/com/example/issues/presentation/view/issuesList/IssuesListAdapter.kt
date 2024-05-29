@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issues.R
 import com.example.issues.domain.Issue
@@ -11,7 +12,7 @@ import com.example.issues.domain.Issue
 class IssuesListAdapter(private val clickListener: ClickListener) :
     RecyclerView.Adapter<IssuesListViewHolder>() {
 
-    private var issuesList = listOf<Issue>()
+    private var OldIssuesList = listOf<Issue>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssuesListViewHolder {
         return IssuesListViewHolder(
@@ -20,22 +21,28 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
         )
     }
 
-    override fun getItemCount(): Int = issuesList.size
-    private fun getItem(position: Int) = issuesList[position]
+    override fun getItemCount(): Int = OldIssuesList.size
+    private fun getItem(position: Int) = OldIssuesList[position]
 
     override fun onBindViewHolder(holder: IssuesListViewHolder, position: Int) {
         holder.bindData(getItem(position))
-        when(issuesList){
-
-        }
         holder.itemView.setOnClickListener {
             clickListener.onCLick(getItem(position))
         }
     }
 
-    fun bindIssue(newIssue: List<Issue>) {
-        issuesList = newIssue
-        notifyDataSetChanged()
+    fun bindIssue(newIssueList: List<Issue>) {
+            val diffUtil = MyDiffUtil(OldIssuesList, newIssueList)
+            val diffResults = DiffUtil.calculateDiff(diffUtil)
+            OldIssuesList = newIssueList
+            diffResults.dispatchUpdatesTo(this)
+    }
+
+    private fun areIssueIsIssue(issueList: List<Issue>): Boolean {
+        issueList.forEach {
+            return it.nodeId.contains("I")
+        }
+        return true
     }
 }
 

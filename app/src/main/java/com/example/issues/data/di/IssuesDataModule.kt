@@ -14,7 +14,6 @@ class IssuesDataModule {
 
     @Module
     abstract class Declarations {
-
         @Binds
         abstract fun bindRepository(issuesRepositoryImpl: IssuesRepositoryImpl): IssuesRepository
     }

@@ -7,6 +7,9 @@ import javax.inject.Inject
 class IssueMapper @Inject constructor() {
     fun toIssue(issueDto: IssueDto) = Issue(
         issueDto.title,
-        issueDto.body
+        issueDto.body,
+        issueDto.id,
+        issueDto.nodeId
+
     )
 }

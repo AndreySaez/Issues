@@ -20,7 +20,6 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 okhttp = "4.12.0"
 retrofit = "2.9.0"
-lifecycleViewmodelCompose = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
