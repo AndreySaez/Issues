@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    //swipe to refresh
+    implementation (libs.androidx.swiperefreshlayout)
     //dagger
     implementation (libs.dagger)
     kapt (libs.dagger.compiler)

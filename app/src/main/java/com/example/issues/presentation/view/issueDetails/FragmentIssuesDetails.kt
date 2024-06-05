@@ -42,7 +42,6 @@ class FragmentIssuesDetails : Fragment() {
 
         private const val ISSUE_KEY = "Issue"
         fun newInstance(issue: Issue): FragmentIssuesDetails {
-
             return FragmentIssuesDetails().apply {
                 arguments = bundleOf(ISSUE_KEY to issue)
             }

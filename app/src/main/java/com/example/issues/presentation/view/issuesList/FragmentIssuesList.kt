@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.issues.R
 import com.example.issues.di.appComponent
 import com.example.issues.presentation.ViewModelFactory
@@ -22,6 +23,8 @@ import javax.inject.Inject
 
 class FragmentIssuesList : Fragment() {
     private var recycler: RecyclerView? = null
+    private lateinit var adapter: IssuesListAdapter
+    private lateinit var swipeView: SwipeRefreshLayout
     private val viewModel by viewModels<IssuesViewModel> { viewModelFactory.get() }
 
     @Inject
@@ -41,8 +44,7 @@ class FragmentIssuesList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recycler = view.findViewById(R.id.rc_view)
-        val adapter = IssuesListAdapter {
-
+        adapter = IssuesListAdapter {
             val issueDetails = FragmentIssuesDetails.newInstance(it)
             parentFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, issueDetails)
@@ -51,8 +53,22 @@ class FragmentIssuesList : Fragment() {
         }
         recycler?.adapter = adapter
         recycler?.layoutManager = LinearLayoutManager(context)
+        //SWIPE VIEW
+        swipeView = view.findViewById(R.id.swipe_to_refresh_view)
+
         viewModel.issuesList.onEach {
             adapter.bindIssue(it)
+            swipeView.isRefreshing = false
+            recycler?.post {
+                recycler?.smoothScrollToPosition(0)
+            }
         }.launchIn(lifecycleScope)
+        refreshRecycler()
+    }
+
+    private fun refreshRecycler() {
+        swipeView.setOnRefreshListener {
+            viewModel.onRefresh()
+        }
     }
 }

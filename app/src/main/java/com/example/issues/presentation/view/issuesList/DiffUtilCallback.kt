@@ -2,10 +2,9 @@ package com.example.issues.presentation.view.issuesList
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.issues.domain.Issue
-import javax.inject.Inject
 
 
-class MyDiffUtil @Inject constructor(
+class DiffUtilCallback (
     private val oldList: List<Issue>,
     private val newList: List<Issue>
 ) : DiffUtil.Callback() {
