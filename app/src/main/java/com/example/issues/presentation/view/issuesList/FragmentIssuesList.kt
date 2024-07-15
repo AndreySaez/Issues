@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -15,24 +16,25 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.issues.R
 import com.example.issues.di.appComponent
-import com.example.issues.presentation.ViewModelFactory
-import com.example.issues.presentation.view.issueDetails.FragmentIssuesDetails
+import com.example.issues.presentation.view.navigation.Navigator
 import com.example.issues.presentation.view.state.IssueListState
 import com.example.issues.presentation.viewModel.IssuesViewModel
-import dagger.Lazy
+import com.example.issues.presentation.viewModel.ViewModelFactory
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class FragmentIssuesList : Fragment() {
     private var recycler: RecyclerView? = null
+    private lateinit var progressBar: ProgressBar
     private lateinit var issuesListIsEmpty: TextView
+    private lateinit var errorText: TextView
     private lateinit var adapter: IssuesListAdapter
     private lateinit var swipeView: SwipeRefreshLayout
-    private val viewModel by viewModels<IssuesViewModel> { viewModelFactory.get() }
+    private val viewModel by viewModels<IssuesViewModel> { viewModelFactory }
 
     @Inject
-    lateinit var viewModelFactory: Lazy<ViewModelFactory>
+    lateinit var viewModelFactory: ViewModelFactory
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)
@@ -49,12 +51,10 @@ class FragmentIssuesList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recycler = view.findViewById(R.id.rc_view)
         issuesListIsEmpty = view.findViewById(R.id.empty_list_text)
+        progressBar = view.findViewById(R.id.progress_bar)
+        errorText = view.findViewById(R.id.error_text)
         adapter = IssuesListAdapter {
-            val issueDetails = FragmentIssuesDetails.newInstance(it)
-            parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, issueDetails)
-                .addToBackStack(null)
-                .commit()
+            Navigator.openDetails(it)
         }
         recycler?.adapter = adapter
         recycler?.layoutManager = LinearLayoutManager(context)
@@ -64,6 +64,7 @@ class FragmentIssuesList : Fragment() {
         viewModel.issuesList.onEach { state ->
             when (state) {
                 is IssueListState.IssueList -> {
+                    errorText.isVisible = false
                     issuesListIsEmpty.isVisible = false
                     recycler?.isVisible = true
                     adapter.bindIssue(state.items)
@@ -74,6 +75,7 @@ class FragmentIssuesList : Fragment() {
                 }
 
                 is IssueListState.Empty -> {
+                    errorText.isVisible = false
                     issuesListIsEmpty.isVisible = true
                     recycler?.isVisible = false
                     swipeView.isRefreshing = false
@@ -81,11 +83,34 @@ class FragmentIssuesList : Fragment() {
                 }
 
                 is IssueListState.Loading -> {
+                    errorText.isVisible = false
+                    swipeView.isRefreshing = false
                     issuesListIsEmpty.isVisible = false
-                    recycler?.isVisible = true
+                    recycler?.isVisible = false
+                    progressBar.isVisible = true
+                }
+
+                is IssueListState.Error -> {
+                    errorText.isVisible = true
+                    swipeView.isRefreshing = false
+                    recycler?.isVisible = false
+                    progressBar.isVisible = false
+                    issuesListIsEmpty.isVisible = false
+
                 }
             }
         }.launchIn(lifecycleScope)
+
+        viewModel.a(requireActivity())
+        Navigator.state
+            .onEach {
+                it.details?.let { details ->
+                    adapter.selectItem(details)
+                } ?: run {
+                    adapter.setNoneSelected()
+                }
+            }
+            .launchIn(lifecycleScope)
         refreshRecycler()
     }
 

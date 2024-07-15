@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.issues.R
 import com.example.issues.domain.Issue
+import com.example.issues.presentation.view.navigation.Navigator
 
 class FragmentIssuesDetails : Fragment() {
     override fun onCreateView(
@@ -21,7 +23,11 @@ class FragmentIssuesDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner){
+            Navigator.closeDetails()
+        }
         val issueData = arguments?.getParcelable(ISSUE_KEY) as? Issue
+            ?: throw IllegalStateException("Иди нахуй")
         issueData?.let {
             bindData(it, view)
         }

@@ -20,13 +20,18 @@ class IssuesViewModel @Inject constructor(private val issuesRepository: IssuesRe
     }
 
     private fun doRequest() {
+
         viewModelScope.launch {
             _issuesList.value = IssueListState.Loading
-            val items = issuesRepository.getIssues()
-            _issuesList.value = if (items.isNotEmpty()) {
-                IssueListState.IssueList(items)
-            } else {
-                IssueListState.Empty
+            try {
+                val items = issuesRepository.getIssues()
+                _issuesList.value = if (items.isNotEmpty()) {
+                    IssueListState.IssueList(items)
+                } else {
+                    IssueListState.Empty
+                }
+            } catch (e: Exception) {
+                _issuesList.value = IssueListState.Error
             }
         }
     }
