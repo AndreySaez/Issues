@@ -1,5 +1,7 @@
 package com.example.issues.presentation.view.issuesList
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
     RecyclerView.Adapter<IssuesListViewHolder>() {
 
     private var emptyIssuesList = listOf<Issue>()
+    var selectedItemPos = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssuesListViewHolder {
         return IssuesListViewHolder(
@@ -24,8 +27,14 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
     override fun getItemCount(): Int = emptyIssuesList.size
     private fun getItem(position: Int) = emptyIssuesList[position]
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: IssuesListViewHolder, position: Int) {
         holder.bindData(getItem(position))
+        if (selectedItemPos == position) {
+            holder.itemView.setBackgroundColor(Color.LTGRAY)
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT)
+        }
         holder.itemView.setOnClickListener {
             clickListener.onCLick(getItem(position))
         }
@@ -37,6 +46,24 @@ class IssuesListAdapter(private val clickListener: ClickListener) :
         emptyIssuesList = newIssueList
         diffResults.dispatchUpdatesTo(this)
     }
+
+    fun selectItem(issue: Issue) {
+        setSingleSelection(emptyIssuesList.indexOf(issue))
+    }
+
+    fun setNoneSelected() {
+        val prevSelected = selectedItemPos
+        selectedItemPos = -1
+        notifyItemChanged(prevSelected)
+    }
+
+    private fun setSingleSelection(adapterPosition: Int) {
+        if (adapterPosition == RecyclerView.NO_POSITION) return
+        notifyItemChanged(selectedItemPos)
+        selectedItemPos = adapterPosition
+        notifyItemChanged(selectedItemPos)
+
+    }
 }
 
 class IssuesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,4 +74,5 @@ class IssuesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         issueTitle.text = issue.title
         issueBody.text = issue.body.toString()
     }
+
 }
