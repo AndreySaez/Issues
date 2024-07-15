@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 class IssuesViewModel @Inject constructor(private val issuesRepository: IssuesRepository) :
     ViewModel() {
     private val _issuesList = MutableStateFlow<IssueListState>(IssueListState.Empty)

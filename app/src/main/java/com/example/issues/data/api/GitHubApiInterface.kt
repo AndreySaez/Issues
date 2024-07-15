@@ -17,7 +17,7 @@ interface GitHubApiInterface {
         "X-GitHub-Api-Version: 2022-11-28"
     )
     suspend fun getIssues(
-        @Query("q") isIssue: String = "is:issue repo:AndreySaez/Issuess"
+        @Query("q") isIssue: String = "is:issue repo:AndreySaez/Issues"
     ): IssueResponseDto
 
     companion object {

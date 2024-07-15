@@ -101,7 +101,6 @@ class FragmentIssuesList : Fragment() {
             }
         }.launchIn(lifecycleScope)
 
-        viewModel.a(requireActivity())
         Navigator.state
             .onEach {
                 it.details?.let { details ->
