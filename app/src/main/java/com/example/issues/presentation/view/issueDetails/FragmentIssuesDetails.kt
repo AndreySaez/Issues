@@ -27,10 +27,8 @@ class FragmentIssuesDetails : Fragment() {
             Navigator.closeDetails()
         }
         val issueData = arguments?.getParcelable(ISSUE_KEY) as? Issue
-            ?: throw IllegalStateException("Иди нахуй")
-        issueData?.let {
-            bindData(it, view)
-        }
+            ?: throw IllegalStateException("Нет данных")
+        bindData(issueData, view)
 
     }
 
